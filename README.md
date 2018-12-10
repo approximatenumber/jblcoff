@@ -1,2 +1,4 @@
-# jblcoff
-JBL Cut Off
+# JBL Cut Off
+
+## Dependencies
+- `python-wxgtk-media3.0`
