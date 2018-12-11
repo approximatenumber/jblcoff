@@ -17,8 +17,9 @@ AUDIOFILE = '20hz-tone.wav'
 class MainWindow(wx.Frame):
     def __init__(self, parent, title):
         """Contructor."""
-        wx.Frame.__init__(self, parent, title=title, size=(250, 200))
-
+        wx.Frame.__init__(self, parent, title=title)
+        self.panel = wx.Panel(self)
+        self.panel.SetSize((250, 200))
         self.set_icon()
 
         self.mc = wx.media.MediaCtrl(self)
@@ -39,17 +40,20 @@ class MainWindow(wx.Frame):
         self.stop_button.Bind(wx.EVT_BUTTON, self.OnStopButton)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(self.panel, 0, wx.CENTER)
         sizer.Add(self.start_button, 0, wx.CENTER)
         sizer.Add(self.stop_button, 0, wx.CENTER)
         sizer.Add(self.volume, 0, wx.CENTER)
         self.SetSizer(sizer)
+        sizer.Layout()
+        self.Layout()
         self.Show(True)
         self.Center()
 
     def OnStartButton(self, evt):
         """Actions for Start button."""
         try:
-            self.play_sound()
+            wx.CallAfter(self.play_sound)
             self.start_button.Disable()
             self.stop_button.Enable()
             self.status_bar.SetStatusText('Playing %s' % AUDIOFILE)
@@ -58,7 +62,7 @@ class MainWindow(wx.Frame):
 
     def OnStopButton(self, evt):
         """Actions for Stop button."""
-        self.stop_sound()
+        wx.CallAfter(self.stop_sound)
         self.stop_button.Disable()
         self.start_button.Enable()
         self.status_bar.SetStatusText('Stopped.')
