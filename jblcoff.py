@@ -17,6 +17,8 @@ class MainWindow(wx.Frame):
     def __init__(self, parent, title):
         wx.Frame.__init__(self, parent, title=title, size=(250, 200))
 
+        self.set_icon()
+
         self.mc = wx.media.MediaCtrl(self)
         self.mc.Bind(wx.media.EVT_MEDIA_FINISHED, self.LoopSound)
 
@@ -61,9 +63,9 @@ class MainWindow(wx.Frame):
         self.play_sound()
 
     def play_sound(self):
-        if not os.path.isfile(AUDIOFILE):
+        if not os.path.isfile(resource_path(AUDIOFILE)):
             raise
-        self.mc.Load(AUDIOFILE)
+        self.mc.Load(resource_path(AUDIOFILE))
         self.mc.Play()
 
     def stop_sound(self):
@@ -83,6 +85,16 @@ class MainWindow(wx.Frame):
         self.currentVolume = self.volume.GetValue()
         self.mc.SetVolume(float(self.currentVolume) / 100)
 
+    def set_icon(self):
+        app_icon = wx.Icon(resource_path('app.ico'))
+        self.SetIcon(app_icon)
+
+
+def resource_path(relative_path):
+    """Find static files inside pyinstaller bundle."""
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 app = wx.App(False)
 frame = MainWindow(None, "JBL Cut Off :-|")
