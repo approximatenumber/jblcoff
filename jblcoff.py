@@ -9,12 +9,14 @@ after a few seconds of silence.
 import wx
 import wx.media
 import os
+import sys
 
 AUDIOFILE = '20hz-tone.wav'
 
 
 class MainWindow(wx.Frame):
     def __init__(self, parent, title):
+        """Contructor."""
         wx.Frame.__init__(self, parent, title=title, size=(250, 200))
 
         self.set_icon()
@@ -45,6 +47,7 @@ class MainWindow(wx.Frame):
         self.Center()
 
     def OnStartButton(self, evt):
+        """Actions for Start button."""
         try:
             self.play_sound()
             self.start_button.Disable()
@@ -54,24 +57,29 @@ class MainWindow(wx.Frame):
             wx.MessageBox("Invalid sound file: %s" % AUDIOFILE, "Error")
 
     def OnStopButton(self, evt):
+        """Actions for Stop button."""
         self.stop_sound()
         self.stop_button.Disable()
         self.start_button.Enable()
         self.status_bar.SetStatusText('Stopped.')
 
     def LoopSound(self, evt):
+        """Loop sound."""
         self.play_sound()
 
     def play_sound(self):
+        """Play sound from file."""
         if not os.path.isfile(resource_path(AUDIOFILE)):
             raise
         self.mc.Load(resource_path(AUDIOFILE))
         self.mc.Play()
 
     def stop_sound(self):
+        """Stop playing sound."""
         self.mc.Stop()
 
     def set_volume_control(self):
+        """Add volume control."""
         self.volume = wx.Slider(self,
                                 style=wx.SL_VERTICAL | wx.SL_INVERSE,
                                 size=(100, 100))
@@ -86,6 +94,7 @@ class MainWindow(wx.Frame):
         self.mc.SetVolume(float(self.currentVolume) / 100)
 
     def set_icon(self):
+        """Set icon for app."""
         app_icon = wx.Icon(resource_path('app.ico'))
         self.SetIcon(app_icon)
 
